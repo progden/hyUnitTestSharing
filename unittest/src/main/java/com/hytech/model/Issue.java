@@ -258,4 +258,13 @@ public class Issue extends BaseModel{
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
     }
+
+	@Override
+	public String toString() {
+		return "Issue [id=" + id + ", status=" + status + ", title=" + title
+				+ ", creater=" + creater + ", owner=" + owner + ", dtCreate="
+				+ dtCreate + ", dtLastupdate=" + dtLastupdate + ", content="
+				+ content + "]";
+	}
+    
 }

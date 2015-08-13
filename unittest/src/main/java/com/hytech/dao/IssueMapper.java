@@ -81,7 +81,8 @@ public interface IssueMapper {
     @Select({
         "select",
         "id, status, title, creater, owner, dt_create, dt_lastupdate, content",
-        "from Issue"
+        "from Issue "+
+        "order by id desc"
     })
     @Results({
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
@@ -135,7 +136,6 @@ public interface IssueMapper {
           "title = #{title,jdbcType=VARCHAR},",
           "creater = #{creater,jdbcType=VARCHAR},",
           "owner = #{owner,jdbcType=VARCHAR},",
-          "dt_create = #{dtCreate,jdbcType=TIMESTAMP},",
           "dt_lastupdate = #{dtLastupdate,jdbcType=TIMESTAMP}",
         "where id = #{id,jdbcType=INTEGER}"
     })
