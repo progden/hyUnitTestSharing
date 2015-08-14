@@ -21,6 +21,7 @@ public class IssueService {
 
 	public IssueService() {
 		super();
+		System.out.println("init Issue Service");
 	}
 
 	public String getAllIssue() {
