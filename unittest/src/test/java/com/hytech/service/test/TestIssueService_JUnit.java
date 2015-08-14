@@ -41,8 +41,8 @@ public class TestIssueService_JUnit {
 	
 	/**
 	 * 測試查詢一筆 Issue 功能
-	 * 檢驗資料是否正確
 	 * 
+	 * 檢驗資料是否正確
 	 * 資料庫是否永遠第一筆資料都是這個測資很讓人擔心
 	 */
 	@Test
@@ -65,6 +65,7 @@ public class TestIssueService_JUnit {
 	public void testAddIssue() {
 		Issue issue = new Issue();
 		issue.setCreater("robert");
+		
 		service.addIssue(issue);
 	}
 	

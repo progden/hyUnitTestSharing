@@ -36,6 +36,9 @@ public class TestIssueService_Mockito {
 	@Mock
 	private SqlSessionFactory sqlSessionFactory;
 	
+	/**
+	 * 	建立初始用資料
+	 */
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
@@ -51,22 +54,35 @@ public class TestIssueService_Mockito {
 		when(sqlSessionFactory.openSession().getMapper(IssueMapper.class).selectByPrimaryKey(3)).thenReturn(getIssueMockData().get(2));
 	}
 	
+	/**
+	 * 	測試取得所有 Issue 功能
+	 *  檢驗資料筆數是否正確
+	 *  
+	 *  再怎麼驗證，都會是正確的。可重複執行。
+	 */
 	@Test
 	public void testGetAllIssue() {
 		String issueJson = service.getAllIssue();
 		List<Issue> issueList = (List<Issue>) BaseModel.fromJsonArrayToModel(issueJson, Issue.class);
 		
 		assertEquals(3, issueList.size());
-		
 		// 資料是null會如何？
 	}
 	
+	/**
+	 * 測試查詢一筆 Issue 功能
+	 * 
+	 * 
+	 */
 	@Test
 	public void testGetIssue() {
 		String issueJson = service.getIssue(1);
 		Issue issue = BaseModel.fromJsonToOwner(issueJson, Issue.class);
-		
+
+		assertEquals("新建立", issue.getStatus());
+		assertEquals("Title1", issue.getTitle());
 		assertEquals("Tester1", issue.getCreater());
+		assertEquals("Tester2", issue.getOwner());
 	}
 	
 	private List<Issue> getIssueMockData() {
@@ -74,7 +90,10 @@ public class TestIssueService_Mockito {
 		for (int i = 1; i <= 3; i++) {
 			Issue issue = new Issue();
 			issue.setId(i);
-			issue.setCreater(String.format("Tester%s", i));
+			issue.setCreater(String.format("Tester%d", i));
+			issue.setOwner(String.format("Tester%d", i+1));
+			issue.setStatus("新建立");
+			issue.setTitle(String.format("Title%d", i));
 			result.add(issue);
 		}
 		

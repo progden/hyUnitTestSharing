@@ -18,6 +18,8 @@
 	var fDate = function(date){
 		return date.getFullYear() + '/'  + (date.getMonth() + 1) + '/' + date.getDate();
 	}
+	
+	// main function here
 	$(function() {
 		reloadData();
 		$("#addIssueForm").submit(function(e) {
@@ -42,7 +44,8 @@
 	var update = function(id){
 		renderUpdate();
 		$.get("issue/"+id).success(renderUpdateIssue);
-	}
+	};
+	
 	var submitIssue = function(_form, _type) {
 		$.ajax({
 			url : "issue",
@@ -51,20 +54,20 @@
 			mimeType : "multipart/form-data",
 			cache : false,
 			processData : false
-		}).success(function(datas) {
-			reloadData();
-		});
-	}
+		}).success(renderAfterSubmit);
+	};
 	
 	/* Render */
 	var renderUpdate = function(){
 		$("#updateForm").show();
 		$("#addForm").hide();
-	}
+	};
+	
 	var renderAdd = function(){
 		$("#updateForm").hide();
 		$("#addForm").show();
-	}
+	};
+	
 	var renderUpdateIssue = function(data){
 		$("#updateIssueForm [name=id]").val(data.id);
 		$("#updateIssueForm [name=title]").val(data.title);
@@ -73,7 +76,7 @@
 		$("#updateIssueForm [name=creater]").val(data.creater);
 		$("#updateIssueForm [name=status]").val(data.status);
 		
-	}
+	};
 	
 	var renderList = function(datas) {
 		var issueList = $("#issueList");
@@ -88,6 +91,11 @@
 					+ fDate(new Date(data.dtLastupdate)) + "</td><td>"
 					+  "<button class=\"btn btn-default\" onclick=\"update("+data.id+")\">update</button></td></tr>")
 		}
+	};
+
+	var renderAfterSubmit = function(datas) {
+		reloadData();
+		$('#addIssueForm').trigger('reset');
 	};
 </script>
 </head>
