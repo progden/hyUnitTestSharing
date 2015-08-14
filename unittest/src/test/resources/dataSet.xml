@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+   <Issue id="1" status="success" creater="shoghi" />
+   <Issue id="2" status="fail" creater="dennis" />
+   <Issue id="3" status="fail" creater="tester" />
+</dataset>
