@@ -14,6 +14,12 @@ import com.hytech.controller.HomeController;
 
 public class TestHomeController {
 
+	/**
+	 * 測試直接存取 controller 是否有回傳對的頁面
+	 * 
+	 * 檢驗是否是回傳 home 頁面
+	 * @throws IOException
+	 */
 	@Test
 	public void testIndex() throws IOException {
 		HttpServletRequest request = null;
