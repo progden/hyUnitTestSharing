@@ -113,7 +113,7 @@
 							<th>id</th>
 							<th>status</th>
 							<th>title</th>
-							<th>creater</th>
+							<th>content</th>
 							<th>owner</th>
 							<th>create</th>
 							<th>lastupdate</th>
