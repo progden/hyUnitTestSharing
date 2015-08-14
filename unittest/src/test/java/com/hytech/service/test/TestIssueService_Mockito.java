@@ -69,7 +69,7 @@ public class TestIssueService_Mockito {
 	 *  
 	 *  
 	 *  可是...
-	 *  拿到三筆資料 是 service 該做的事情嗎?
+	 *  拿到三筆資料 是 service 真正該做的事情嗎?
 	 */
 	@Test
 	public void testGetAllIssue() {

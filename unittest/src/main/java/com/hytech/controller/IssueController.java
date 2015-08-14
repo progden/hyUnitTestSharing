@@ -45,13 +45,13 @@ public class IssueController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		
-		String json;
+		String json = null;
 		try {
 			json = issueService.getIssueByCondition(params);
 		} catch (CustomException e) {
 			// FIXME log error here
 			
-			json = issueService.getAllIssue();
+			
 		}
 		
 		return new ResponseEntity<String>(json, headers, HttpStatus.OK);
