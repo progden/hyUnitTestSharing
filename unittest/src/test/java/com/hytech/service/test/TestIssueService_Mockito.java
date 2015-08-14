@@ -64,7 +64,12 @@ public class TestIssueService_Mockito {
 	 * 	測試取得所有 Issue 功能
 	 *  檢驗資料筆數是否正確
 	 *  
+	 *  
 	 *  再怎麼驗證，都會是正確的。可重複執行。
+	 *  
+	 *  
+	 *  可是...
+	 *  拿到三筆資料 是 service 該做的事情嗎?
 	 */
 	@Test
 	public void testGetAllIssue() {
@@ -72,12 +77,21 @@ public class TestIssueService_Mockito {
 		List<Issue> issueList = (List<Issue>) BaseModel.fromJsonArrayToModel(issueJson, Issue.class);
 		
 		assertEquals(3, issueList.size());
+	}
+
+	@Test
+	public void testGetAllIssue2() {
+		// 驗證是否有呼叫對的 dao 或其他服務
+	}
+	
+	@Test
+	public void testGetAllIssue3() {
 		// 資料是null會如何？
 	}
 	
+	
 	/**
 	 * 測試查詢一筆 Issue 功能
-	 * 
 	 * 
 	 */
 	@Test
