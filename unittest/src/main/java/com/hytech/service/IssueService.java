@@ -1,10 +1,12 @@
 package com.hytech.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
 import com.hytech.dao.IssueMapper;
+import com.hytech.exception.CustomException;
 import com.hytech.model.Issue;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -54,5 +56,19 @@ public class IssueService {
 		int rs = maper.updateByPrimaryKey(issue);
 		sqlSession.close();
 		return (rs == 1)? "{\"status\": \"OK\"}":"{\"status\":\"Fail\"}";	
+	}
+
+	public String getIssueByCondition(Map<String, String> param) throws CustomException {
+		String keyword = param.get("key");
+		if(keyword == null || "".equals(keyword.trim())){
+			throw new CustomException("must have keyword.");
+		}
+			
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		IssueMapper maper = sqlSession.getMapper(IssueMapper.class);
+		List<Issue> rs = maper.selectByCondition(param);
+		String json = Issue.toJsonArray(rs);
+		sqlSession.close();
+		return json;
 	}
 }

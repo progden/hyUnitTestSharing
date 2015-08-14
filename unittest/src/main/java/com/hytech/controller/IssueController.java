@@ -1,6 +1,7 @@
 package com.hytech.controller;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hytech.exception.CustomException;
 import com.hytech.model.Issue;
 import com.hytech.service.IssueService;
 
@@ -33,6 +36,24 @@ public class IssueController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		String json = issueService.getAllIssue();
+		return new ResponseEntity<String>(json, headers, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, params="condition")
+	@ResponseBody
+	public ResponseEntity<String> queryIssue(HttpServletRequest req, @RequestParam Map<String, String> params){
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+		
+		String json;
+		try {
+			json = issueService.getIssueByCondition(params);
+		} catch (CustomException e) {
+			// FIXME log error here
+			
+			json = issueService.getAllIssue();
+		}
+		
 		return new ResponseEntity<String>(json, headers, HttpStatus.OK);
 	}
 
