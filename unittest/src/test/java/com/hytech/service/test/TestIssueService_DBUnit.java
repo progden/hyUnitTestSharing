@@ -1,30 +1,23 @@
 package com.hytech.service.test;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseTestCase;
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.database.QueryDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.ITableMetaData;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.dataset.xml.FlatXmlProducer;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
@@ -36,6 +29,7 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.xml.sax.InputSource;
 
 import com.hytech.config.MvcConfiguration;
 import com.hytech.dao.IssueMapper;
@@ -79,7 +73,8 @@ public class TestIssueService_DBUnit extends DatabaseTestCase {
 	
 	@After
 	public void tearDownClass() throws Exception {
-		IDataSet dataSet = new FlatXmlDataSet(backupFile);
+		
+		IDataSet dataSet = new FlatXmlDataSet(new FlatXmlProducer(new InputSource(new FileInputStream(backupFile))));
 		DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
 		connection.close();
     }
