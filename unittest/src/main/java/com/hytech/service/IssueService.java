@@ -61,9 +61,9 @@ public class IssueService {
 	public String getIssueByCondition(Map<String, String> param) throws CustomException {
 		String keyword = param.get("key");
 		if(keyword == null || "".equals(keyword.trim())){
-			throw new CustomException("must have keyword.");
+			return this.getAllIssue();
 		}
-			
+		
 		SqlSession sqlSession = sqlSessionFactory.openSession();
 		IssueMapper maper = sqlSession.getMapper(IssueMapper.class);
 		List<Issue> rs = maper.selectByCondition(param);

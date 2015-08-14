@@ -2,8 +2,12 @@ package com.hytech.service.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.hytech.config.MvcConfiguration;
+import com.hytech.exception.CustomException;
 import com.hytech.model.BaseModel;
 import com.hytech.model.Issue;
 import com.hytech.service.IssueService;
@@ -90,6 +95,31 @@ public class TestIssueService_JUnit {
 		
 		// 驗證
 		assertEquals("shoghi", issue.getOwner());
+	}
+	
+	/**
+	 * 	單元測試 含條件的查詢
+	 * 
+	 *  這樣測試好嗎?
+	 */
+	@Test
+	public void testConditionQuery(){
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("key", "test");
+
+		String issueJson = null;
+		try {
+			issueJson = service.getIssueByCondition(param);
+		} catch (CustomException e) {
+			Assert.assertTrue(true); // should not go here, cause we have data in database!?!?
+		}
+		
+		Assert.assertNotNull(issueJson);
+		
+		Collection<Issue> list = Issue.fromJsonArrayToModel(issueJson, Issue.class);
+		//System.out.println(list.size());
+		
+		Assert.assertEquals(3, list.size());
 	}
 	
 }

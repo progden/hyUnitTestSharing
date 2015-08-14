@@ -5,15 +5,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,6 +26,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.hytech.config.MvcConfiguration;
 import com.hytech.dao.IssueMapper;
+import com.hytech.exception.CustomException;
 import com.hytech.model.BaseModel;
 import com.hytech.model.Issue;
 import com.hytech.service.IssueService;
@@ -85,6 +91,40 @@ public class TestIssueService_Mockito {
 		assertEquals("Tester2", issue.getOwner());
 	}
 	
+	/**
+	 * service 做的工作是呼叫 dao 跟 處理業務邏輯
+	 * 
+	 * 這裏的業務邏輯是 
+	 *   如果沒有傳遞 key 參數會查全部資料
+	 *   如果有傳遞 key 參數會依照 key 來查詢
+	 */
+	@Test
+	public void testConditionQuery(){
+		Map<String, String> param = new HashMap<String, String>();
+//		param.put("key", "ontent");
+		try {
+			String issueJson = null;
+			issueJson = service.getIssueByCondition(param);
+		} catch (CustomException e) {
+			Assert.assertTrue(true); // should not go here, cause we have data in database!?!?
+		}
+//		Mockito.verify(sqlSessionFactory.openSession().getMapper(IssueMapper.class)).selectAll(); // SAME as next line
+		Mockito.verify(sqlSessionFactory.openSession().getMapper(IssueMapper.class), Mockito.times(1)).selectAll();
+		
+	}
+	@Test
+	public void testConditionQuery2(){
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("key", "ontent");
+		try {
+			String issueJson = service.getIssueByCondition(param);
+		} catch (CustomException e) {
+			Assert.assertTrue(true); // should not go here, cause we have data in database!?!?
+		}
+//		Mockito.verify(sqlSessionFactory.openSession().getMapper(IssueMapper.class)).selectByCondition(Mockito.anyMap());
+		Mockito.verify(sqlSessionFactory.openSession().getMapper(IssueMapper.class), Mockito.times(1)).selectByCondition(Mockito.anyMap());
+	}
+	
 	private List<Issue> getIssueMockData() {
 		List<Issue> result = new ArrayList<Issue>();
 		for (int i = 1; i <= 3; i++) {
@@ -94,6 +134,7 @@ public class TestIssueService_Mockito {
 			issue.setOwner(String.format("Tester%d", i+1));
 			issue.setStatus("新建立");
 			issue.setTitle(String.format("Title%d", i));
+			issue.setContent(String.format("Content%d", i));
 			result.add(issue);
 		}
 		
