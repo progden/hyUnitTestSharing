@@ -24,3 +24,7 @@
 	* import Maven 專案
 	* Maven -> update project
 	* Run as -> Run on Server...
+
+
+* Ref
+	* Mockito docs - http://site.mockito.org/mockito/docs/current/org/mockito/Mockito.html 
