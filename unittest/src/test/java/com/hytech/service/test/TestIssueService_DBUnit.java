@@ -1,5 +1,8 @@
 package com.hytech.service.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,7 +12,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.dbunit.DatabaseTestCase;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.database.QueryDataSet;
@@ -38,7 +40,7 @@ import com.hytech.model.Issue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes=MvcConfiguration.class)
-public class TestIssueService_DBUnit extends DatabaseTestCase {
+public class TestIssueService_DBUnit {
 	
 	@Autowired
 	private DataSource dataSource;
@@ -98,22 +100,4 @@ public class TestIssueService_DBUnit extends DatabaseTestCase {
 		assertEquals("3", String.valueOf(resultId3.getId()));
 		assertNull(resultId4);
 	}
-
-	@Override
-	protected IDatabaseConnection getConnection() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected IDataSet getDataSet() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-//	@Test
-//	public void test() {
-//		issueMapper.insert(record);
-//	}
-	
 }
