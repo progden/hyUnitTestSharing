@@ -2,6 +2,8 @@ package com.hytech.service.test;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,14 +12,18 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.dbunit.DataSourceDatabaseTester;
+import org.dbunit.DatabaseTestCase;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.database.QueryDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableMetaData;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
@@ -38,7 +44,7 @@ import com.hytech.model.Issue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes=MvcConfiguration.class)
-public class TestIssueService_DBUnit {
+public class TestIssueService_DBUnit extends DatabaseTestCase {
 	
 	@Autowired
 	private DataSource dataSource;
@@ -51,24 +57,30 @@ public class TestIssueService_DBUnit {
 	
 	private IDatabaseConnection connection;
 	
-	private IDatabaseTester databaseTester;
+	private File backupFile;
 	
 	@Before
 	public void init() throws Exception {
 		// 建立連線
 		connection = new DatabaseConnection(DataSourceUtils.getConnection(dataSource));
 		
+		// 備份
+		QueryDataSet backup = new QueryDataSet(connection);
+		backup.addTable("Issue");
+		backupFile = File.createTempFile("issue_backup", ".xml");
+		FlatXmlDataSet.write(backup, new FileOutputStream(backupFile));
+		
 		// 測試前讀入初始資料集合、清除表格並將初始資料集合新增至資料庫中的表格
 		FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
 		IDataSet dataSet = builder.build(new ClassPathResource("/dataSet.xml").getInputStream());
 		DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
-		databaseTester.setDataSet(dataSet);
-		databaseTester.onSetup();
+		
 	}
 	
 	@After
 	public void tearDownClass() throws Exception {
-		databaseTester.onTearDown();
+		IDataSet dataSet = new FlatXmlDataSet(backupFile);
+		DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
 		connection.close();
     }
 	
@@ -90,6 +102,18 @@ public class TestIssueService_DBUnit {
 		assertEquals("2", String.valueOf(resultId2.getId()));
 		assertEquals("3", String.valueOf(resultId3.getId()));
 		assertNull(resultId4);
+	}
+
+	@Override
+	protected IDatabaseConnection getConnection() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected IDataSet getDataSet() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 //	@Test
