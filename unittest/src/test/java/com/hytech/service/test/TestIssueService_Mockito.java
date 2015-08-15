@@ -36,8 +36,10 @@ import com.hytech.service.IssueService;
 @ContextConfiguration(classes=MvcConfiguration.class)
 public class TestIssueService_Mockito {
 	
+	@InjectMocks
 	private IssueService service;
 	
+	@Mock
 	private SqlSessionFactory sqlSessionFactory;
 	
 	/**
